@@ -10,14 +10,14 @@ import (
 )
 
 
-type PersonAppearanceData struct {
+type SiteAppearanceData struct {
 	Tv [][]string
 	Movie [][]string
 }
 
-type PersonAppearance struct {
+type SiteAppearance struct {
 	Name string
-	Data PersonAppearanceData
+	Data SiteAppearanceData
 }
 
 func Scraping(url, charset string) (*goquery.Document) {
