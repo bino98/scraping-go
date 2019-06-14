@@ -1,10 +1,10 @@
 package main
 
 import (
-	"./sites/abehiroshi"
-	"./sites/hoshinogen"
-	"./db"
-	"./model"
+	"./app/sites/abehiroshi"
+	"./app/sites/hoshinogen"
+	"./app/db"
+	"./app/model"
 	"sync"
 )
 
