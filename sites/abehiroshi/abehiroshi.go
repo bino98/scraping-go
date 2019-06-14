@@ -1,11 +1,11 @@
-package sites
+package abehiroshi
 
 import (
 	"github.com/PuerkitoBio/goquery"
-	"../site"
+	"../../site"
 )
 
-func Abehiroshi() site.SiteAppearance {
+func Apperances() site.SiteAppearance {
 	appearanceData := site.SiteAppearanceData{ Tv: tvAppearance(), Movie: movieAppearance() }
 	return site.SiteAppearance{ Name: "abehiroshi", Data: appearanceData }
 }

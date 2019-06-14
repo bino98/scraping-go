@@ -1,11 +1,11 @@
-package sites
+package hoshinogen
 
 import (
 	"github.com/PuerkitoBio/goquery"
-	"../site"
+	"../../site"
 )
 
-func Hoshinogen() site.SiteAppearance {
+func Apperances() site.SiteAppearance {
 	appearanceData := site.SiteAppearanceData{ Tv: tvAppearanceHoshinogen() }
 	return site.SiteAppearance{ Name: "hoshinogen", Data: appearanceData }
 }

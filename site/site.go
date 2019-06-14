@@ -7,6 +7,8 @@ import (
 	"strings"
 	"fmt"
 	"net/http"
+	"time"
+
 )
 
 
@@ -21,28 +23,49 @@ type SiteAppearance struct {
 }
 
 func Scraping(url, charset string) (*goquery.Document) {
-	res, err := http.Get(url)
-	if err != nil {
-		fmt.Println("res getted failed")
-	}
-	defer res.Body.Close()
-
-	utfBody, err := iconv.NewReader(res.Body, charset, "utf8")
-	if err != nil {
-		fmt.Println("converted failed")
-	}
-
-	doc, err := goquery.NewDocumentFromReader(utfBody)
+	doc, err := fetchPage(url, charset, 10)
 	
 	if err != nil {
-		fmt.Println(err)
-		fmt.Println("url scarapping failed")
+		panic("fetchPage failed")
 	}
-
 	return doc
 }
 
 func Sanitize(origin string) string {
 	str := strings.Replace(origin, "\n", "", -1)
 	return strings.Replace(str, " ", "", -1)
+}
+
+func fetchPage(url string, charset string, reTry int) (*goquery.Document, error) {
+	client := &http.Client{Timeout: time.Duration(10*(10-reTry)) * time.Second}
+
+	resp, err := client.Get(url)
+	if err != nil {
+		fmt.Println("res getted failed")
+		if reTry == 0 {
+				return nil, err
+		}
+		return fetchPage(url, charset, reTry-1)
+	}
+
+	utfBody, err := iconv.NewReader(resp.Body, charset, "utf8")
+	if err != nil {
+		fmt.Println("converted failed")
+		if reTry == 0 {
+			return nil, err
+		}
+		return fetchPage(url, charset, reTry-1)
+	}
+
+	doc, err := goquery.NewDocumentFromReader(utfBody)
+	
+	if err != nil {
+		fmt.Println("url scarapping failed")
+		if reTry == 0 {
+			return nil, err
+		}
+		return fetchPage(url, charset, reTry-1)
+	}
+
+	return doc, err
 }
