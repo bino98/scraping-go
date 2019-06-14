@@ -5,9 +5,9 @@ import (
 	"../site"
 )
 
-func Abehiroshi() site.PersonAppearance {
-	appearanceData := site.PersonAppearanceData{ Tv: tvAppearance(), Movie: movieAppearance() }
-	return site.PersonAppearance{ Name: "abehiroshi", Data: appearanceData }
+func Abehiroshi() site.SiteAppearance {
+	appearanceData := site.SiteAppearanceData{ Tv: tvAppearance(), Movie: movieAppearance() }
+	return site.SiteAppearance{ Name: "abehiroshi", Data: appearanceData }
 }
 
 func tvAppearance() [][]string {

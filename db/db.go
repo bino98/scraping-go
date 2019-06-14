@@ -1,20 +1,19 @@
 package db
 
 import (
-	"database/sql"
 	"strings"
 	"os"
 	"fmt"
-	_ "github.com/go-sql-driver/mysql"
+	"github.com/jinzhu/gorm"
+  _ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
-func Init() (*sql.DB) {
-	connectionString := getConnectionString()
-	db, err := sql.Open("mysql", connectionString)
+func Init() (*gorm.DB) {
+	db,err := gorm.Open("mysql", getConnectionString())
 	if err != nil {
-		fmt.Println(err)
-	}
-	return db
+    panic(err.Error())
+  }
+  return db
 }
 
 func getParamString(param string, defaultValue string) string {
@@ -41,5 +40,5 @@ func getConnectionString() string {
 		dbargs = ""
 	}
 
-	return fmt.Sprintf("%s:%s@%s([%s]:%s)/%s%s", user, pass, protocol, host, port, dbname, dbargs)
+	return fmt.Sprintf("%s:%s@%s([%s]:%s)/%s%s?parseTime=true", user, pass, protocol, host, port, dbname, dbargs)
 }
