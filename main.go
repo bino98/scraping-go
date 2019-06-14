@@ -1,15 +1,33 @@
 package main
 
 import (
-	"./sites"
+	"./sites/abehiroshi"
+	"./sites/hoshinogen"
 	"./db"
 	"./model"
+	"sync"
 )
 
 func main() {
-	abehiroshiData := model.ConvertApperanceFromSiteApperance(sites.Abehiroshi())
-	hoshinogenData := model.ConvertApperanceFromSiteApperance(sites.Hoshinogen())
-	apperances := append(abehiroshiData, hoshinogenData...)
+	var apperances []model.Appearance
+
+	funcs := []func() {
+		func() { apperances = append(apperances, model.ConvertApperanceFromSiteApperance(abehiroshi.Apperances())...) },
+		func() { apperances = append(apperances, model.ConvertApperanceFromSiteApperance(hoshinogen.Apperances())...) },
+	}
+
+	var waitGroup sync.WaitGroup
+
+	for _, apperanceFunc := range funcs {
+		waitGroup.Add(1)
+		go func(function func()) {
+			defer waitGroup.Done()
+			function()
+		}(apperanceFunc)
+	}
+
+	waitGroup.Wait()
+	
 	db := db.Init()
 	defer db.Close()
 
